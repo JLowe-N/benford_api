@@ -1,0 +1,52 @@
+Table widget as W {
+  widget_id int [pk, increment] // auto-increment
+  widget var_char
+}
+
+Table customer as C {
+  customer_id int [pk, increment]
+  customer varchar
+ }
+ 
+Table supplier as S {
+   supplier_id int [pk, increment]
+   supplier varchar
+}
+
+Table warehouse as WHS {
+  warehouse_id int [pk, increment]
+  supplier_id int [pk, ref: > S.supplier_id]
+  warehouse_code char(3)
+}
+
+Table pricing as PRI {
+  widget_id int [pk, ref: > W.widget_id]
+  customer_id int [pk, ref: > C.customer_id]
+  quantity int [pk, ref: > PKG.quantity]
+  price money
+}
+
+Table cost as COS {
+  widget_id int [pk, ref: > W.widget_id]
+  supplier_id int [pk, ref: > S.supplier_id]
+  cost money
+}
+
+Table packaging as PKG {
+  package_id int [pk, increment]
+  widget_id int [pk, ref: > W.widget_id]
+  container varchar
+  quantity int
+}
+
+Table inventory as IVN {
+  widget_id int [pk, ref: > W.widget_id]
+  supplier_id int [pk, ref: > S.supplier_id]
+  warehouse_id int [pk, ref: > WHS.warehouse_id]
+  qty int
+  min_qty int
+}
+
+
+
+
