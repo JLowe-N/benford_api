@@ -1,0 +1,276 @@
+Traceback Problem 1
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 45, in <lambda>
+    run_trace(1, lambda: perform_calculation(add, '1', 3))
+  File "stack_traces.py", line 8, in perform_calculation
+    calc(x, y)
+  File "stack_traces.py", line 12, in add
+    return x + y
+TypeError: can only concatenate str (not "int") to str
+
+'''
+Justin:
+In the stack_traces.py module within the perform_calculation function,
+we are performing a simple addition x + y (the arguments of the function).
+Assuming these references to x and y have not been reassigned to a different
+value, the input arguments are not the correct type.  '1' as denoted by the quotes
+is a string value.  3 is an integer value.  Because the x argument is a string,
+Python is attempting to treat the '+' operator as a concatenation.
+
+Source Of Error: Incorrect Arguments supplied to function defined at line 8.
+Possible Solution: Add typechecks at input or within function
+
+if isInstance(x, int) and isInstance(y, int):
+     #proceed with function
+else:
+    print('X and Y arguments must be of type int.')
+
+Error at:
+Line 45 function call, to function defined at Line 8, to it's return statment at Line 12
+'''
+
+Traceback Problem 2
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 46, in <lambda>
+    run_trace(2, lambda: perform_calculation(add, 7, '3'))
+  File "stack_traces.py", line 8, in perform_calculation
+    calc(x, y)
+  File "stack_traces.py", line 12, in add
+    return x + y
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+
+'''
+Justin:
+This is a similar issue to Traceback 1, except now the x and y types have been
+switched.  x is now an int, and dictating the behavior of the '+' operator in
+the return statement - no concatenation is attempted, but you still can't 
+add an integer and string without typecasting.
+
+Error at:
+Line 46 function call, to function defined at Line 8, to it's return statment at Line 12
+'''
+
+
+Traceback Problem 3
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 47, in <lambda>
+    run_trace(3, lambda: perform_calculation(mult, '3', '3'))
+  File "stack_traces.py", line 8, in perform_calculation
+    calc(x, y)
+  File "stack_traces.py", line 15, in mult
+    return x * y
+TypeError: can't multiply sequence by non-int of type 'str'
+
+'''
+Justin:
+Now we are working with 2 string types, and trying to multiply them together.
+The different TypeError text is due to the fact that Python allows you to 
+multiply strings to get repeating sequences.  But we cannot perform that
+operation because the first argument is also a string.  This behavior does 
+not seem to be the intended use for 'perform_calculation', so setting up
+typeguards would be a good idea.
+
+Examples:
+3 * '3'  # '333'
+3 * 'hi' # 'hihihi'
+
+Error at:
+Line 47 function call, to function defined at Line 8, to it's return statment at Line 15
+'''
+
+Traceback Problem 4
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 48, in <lambda>
+    run_trace(4, lambda: perform_calculation(mult, [4], [3]))
+  File "stack_traces.py", line 8, in perform_calculation
+    calc(x, y)
+  File "stack_traces.py", line 15, in mult
+    return x * y
+TypeError: can't multiply sequence by non-int of type 'list'
+
+'''
+Justin:
+This error is similar in nature to Tracebook 3.  This time the arguments we
+are providing are both single-element List type represented by [4] [3].
+In Python, we can create a repeating sequence within a list, by multiplying
+with an integer.    Because both arguments are of type List, the Python interpreter
+does not have a defined operation for 2 Lists with the '*' operator.  The Error
+is anticipating us using this sequence repeating operation.
+
+Example:
+4 * [3] # [3, 3, 3]
+3 * ['hi', 'bye'] # ['hi' 'bye', 'hi', 'bye', 'hi', 'bye']
+
+Error at:
+Line 48 function call, to function defined at Line 8, to it's return statment at Line 15
+'''
+
+
+Traceback Problem 5
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 49, in <lambda>
+    run_trace(5, lambda: perform_calculation(innoc, '1', 3))
+  File "stack_traces.py", line 8, in perform_calculation
+    calc(x, y)
+  File "stack_traces.py", line 22, in innoc
+    spelunk()
+  File "stack_traces.py", line 21, in spelunk
+    raise ValueError('Invalid')
+ValueError: Invalid
+
+'''
+Justin:
+
+Error at:
+Line 49 function call, to function defined at Line 8, which calls an inner 'innoc'
+function.  The 'innoc' function calls an inner function of it's own called 'spelunk'
+at Line 22. Inside the 'spelunk' function at Line 21, we have thrown a ValueError
+with the message 'Invalid'.  
+
+Without knowing the implementation details, I can only comment on where the error
+occurred due to the minimal description of the error raised by the 'spelunk' developer.
+If I were to debug this program (other than attaching a debugger w/ breakpoint),
+I would look to Line 21 first and work my way up from there.
+'''
+
+
+Traceback Problem 6
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 50, in <lambda>
+    run_trace(6, lambda: comp_calc([1, 2, 3], 1, add))
+  File "stack_traces.py", line 30, in comp_calc
+    return [perform_calculation(calc, x_i, y_i) for x_i, y_i in zip(x, y)]
+TypeError: zip argument #2 must support iteration
+
+'''
+'zip' in python must be used with iterables.  Here we have provided
+the function with List [1, 2, 3] and the integer 1.  Zip pairs the the elements
+of each iterable at the corresponding indices, with the shorter iterable dictating
+the returned pairing length.  The paired elements are returned in a zip object -
+which is an iterable of tuples.
+
+Example:
+[x for x in zip([1, 2, 3], [1])] 
+# [(1, 1)]
+[x for x in zip([1, 2, 3], [3, 2, 1])] 
+# [(1, 3), (2, 2), (3, 1)]
+
+Error at:
+Line 50 function call, to inside function 'comp_calc' at Line 30 at it's 
+return statement
+'''
+
+Traceback Problem 7
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 51, in <lambda>
+    run_trace(7, lambda: comp_calc([1, 2, [3]], [4, 5, 6], add))
+  File "stack_traces.py", line 30, in comp_calc
+    return [perform_calculation(calc, x_i, y_i) for x_i, y_i in zip(x, y)]
+  File "stack_traces.py", line 30, in <listcomp>
+    return [perform_calculation(calc, x_i, y_i) for x_i, y_i in zip(x, y)]
+  File "stack_traces.py", line 8, in perform_calculation
+    calc(x, y)
+  File "stack_traces.py", line 12, in add
+    return x + y
+TypeError: can only concatenate list (not "int") to list
+
+'''
+Justin:
+In Traceback 7, we are zipping together a flat list with a nested list.  When we
+zip these elements together, we get the iterable as follows:
+((1, 4), (2, 3), ([3], 6))
+As we begin to process these tuples in our add function, the 3rd tuple throws
+a TypeError because we are trying to perform the operation [3] + 6.
+The '+' operator with a list acts as a concatenation operation and not simple
+arithmatic.  A possible solution is the 3 needs to be flattened into an integer.
+
+The concatenation operation for lists looks like:
+[3] + [6]
+# [3, 6]
+[1, 2, 3] + [4, 5, 6]
+# [1, 2, 3, 4, 5, 6]
+
+Error at:
+Line 51 function call, to inside function 'comp_calc' at Line 30 return 
+statement, which first evaluates perform_calculations calling the calc function
+at Line 8, where the error throws at Line 12 addition operation on the 3rd tuple.
+'''
+
+Traceback Problem 8
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 52, in <lambda>
+    run_trace(8, lambda: calc_dict({'one': 1, 'two': '2'}, 'one', 'two', add))
+  File "stack_traces.py", line 26, in calc_dict
+    return perform_calculation(calc, d[k1], d[k2])
+  File "stack_traces.py", line 8, in perform_calculation
+    calc(x, y)
+  File "stack_traces.py", line 12, in add
+    return x + y
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+
+'''
+Justin:
+Now we are calling calculations on values accessed with keys in a dictionary.
+The problem is that the values returned from the keys are of inconsistent data type.
+
+d['one'] = 1 # int
+d['two'] = '2' # str 
+
+We are again trying to add integers and strings which is not supported, and
+would at the very least require a type conversion or more discipline in conforming
+to a key:value schema for the dictionary.
+
+Error at:
+Line 52 function call, to inside function 'calc_dict' at line 26 which calls
+perform_calculations.  This calls calc(x, y) at line 8, which calls add(x, y)
+and throws the TypeError at Line 12.
+'''
+
+Traceback Problem 9
+===================
+Traceback (most recent call last):
+  File "stack_traces.py", line 36, in run_trace
+    f()
+  File "stack_traces.py", line 53, in <lambda>
+    run_trace(9, lambda: calc_dict({}, 'one', 'two', add))
+  File "stack_traces.py", line 26, in calc_dict
+    return perform_calculation(calc, d[k1], d[k2])
+KeyError: 'one'
+
+'''
+Justin:
+This time we are trying to access an empty dictionary with the keys 'one'
+and 'two'.  Because these keys are not present, we are getting a KeyError when 
+we attempt to access the first key with d[k1] ('one')arithmatic.
+
+Error at:
+Line 53 function call, defined empty dict as well as key arguments 'one' and 'two'
+which do not exist in the dictionary.  At line 26 in calc_dict we try to access 
+'one' in the argument d[k1] which throws the error.
+'''
+
+
