@@ -23,10 +23,11 @@ class uploadRequestHandler(tornado.web.RequestHandler):
         dataset = pd.read_csv(io.BytesIO(body), sep='\t')
         target_col = dataset['7_2009']
         target_col = target_col.transform(extract_first_digit, axis=0)
+        target_col = target_col.value_counts(normalize=True)
         # target_col = str(target_col)[0]
-        print(target_col.head())
-        print(target_col.describe())
-        ax = sns.countplot(x=target_col)
+        print(target_col)
+        ax = sns.barplot(
+            x=target_col.index, y=target_col)
         plt.show()
 
 
