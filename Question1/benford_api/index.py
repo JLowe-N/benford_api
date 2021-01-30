@@ -3,6 +3,8 @@ import tornado.ioloop
 import os
 import io
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 class uploadRequestHandler(tornado.web.RequestHandler):
@@ -24,7 +26,8 @@ class uploadRequestHandler(tornado.web.RequestHandler):
         # target_col = str(target_col)[0]
         print(target_col.head())
         print(target_col.describe())
-        
+        ax = sns.countplot(x=target_col)
+        plt.show()
 
 
 class staticRequestHandler(tornado.web.RequestHandler):
