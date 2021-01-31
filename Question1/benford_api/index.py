@@ -23,8 +23,7 @@ class uploadRequestHandler(web.RequestHandler):
         target_col = dataset['7_2009']
         target_col = target_col.transform(extract_first_digit, axis=0)
         target_col = target_col.value_counts(normalize=True)
-        # target_col = str(target_col)[0]
-        print(target_col)
+
         ax = sns.barplot(
             x=target_col.index, y=target_col)
 
@@ -40,8 +39,6 @@ class uploadRequestHandler(web.RequestHandler):
             if not chunk:
                 break
             try:
-                print(chunk)
-                print(type(chunk))
                 self.write(chunk)
                 await self.flush()
             except iostream.StreamClosedError:
@@ -53,17 +50,26 @@ class uploadRequestHandler(web.RequestHandler):
 
 class staticRequestHandler(web.RequestHandler):
     def get(self):
-        self.render(os.path.join(dirname, 'static/index.html'))
+        self.render('index.html')
 
 
-if __name__ == '__main__':
-    dirname = os.path.dirname(__file__)
+def main():
+    settings = {
+        "template_path": os.path.join(os.path.dirname(__file__), "templates"),
+        "static_path": os.path.join(os.path.dirname(__file__), "static"),
+        "debug": True
+    }
     PORT = 8881
-    app = web.Application([
-        (r"/", staticRequestHandler),
-        (r"/upload", uploadRequestHandler)
-    ])
-
+    app = web.Application(
+        [
+            (r"/", staticRequestHandler),
+            (r"/upload", uploadRequestHandler)
+        ], **settings
+    )
     app.listen(PORT)
     print(f"Tornado listening on port {PORT}")
     ioloop.IOLoop.current().start()
+
+
+if __name__ == '__main__':
+    main()
