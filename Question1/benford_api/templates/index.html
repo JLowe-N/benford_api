@@ -4,19 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href=
-    
-    <title>Benford API</title>
+    <link href=<title>Benford API</title>
 </head>
 
 <body>
     Welcome to Benford API!
     <p>Please upload your TSV to analyze.</p>
-    <form enctype="multipart/form-data" action="/upload" method="post">
+    <form enctype="multipart/form-data" action="/" method="post">
         File: <input type="file" name="input_file" />
         <br />
         <br />
         <input type="submit" value="upload" />
+        <br />
+        <br />
+        <div id="plot">
+            {% if plot %}
+            <img src="{{ plot }}" /> {% end %}
+        </div>
     </form>
 </body>
 

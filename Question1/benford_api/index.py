@@ -4,9 +4,13 @@ import io
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from base64 import b64encode
 
 
-class uploadRequestHandler(web.RequestHandler):
+class benfordRequestHandler(web.RequestHandler):
+    def get(self):
+        self.render('index.html', plot=None)
+
     async def post(self):
         def extract_first_digit(number):
             string = str(number)
@@ -27,30 +31,14 @@ class uploadRequestHandler(web.RequestHandler):
         ax = sns.barplot(
             x=target_col.index, y=target_col)
 
-        buf = io.BytesIO()
-        figure = ax.get_figure()
-        figure.savefig(buf, format="png")
-        buf.seek(0)
+        stream = io.BytesIO()
+        plot = ax.get_figure()
+        plot.savefig(stream, format="png")
+        stream.seek(0)
+        plot = b64encode(stream.read())
+        plot_src = 'data:image/png;base64,' + plot.decode('utf-8')
 
-        chunk_size = 1024 * 1024 * 1
-        self.set_header("Content-Type", "image/png")
-        while True:
-            chunk = buf.read(chunk_size)
-            if not chunk:
-                break
-            try:
-                self.write(chunk)
-                await self.flush()
-            except iostream.StreamClosedError:
-                break
-            finally:
-                del chunk
-        self.finish()
-
-
-class staticRequestHandler(web.RequestHandler):
-    def get(self):
-        self.render('index.html')
+        self.render('index.html', plot=plot_src)
 
 
 def main():
@@ -62,8 +50,7 @@ def main():
     PORT = 8881
     app = web.Application(
         [
-            (r"/", staticRequestHandler),
-            (r"/upload", uploadRequestHandler)
+            (r"/", benfordRequestHandler),
         ], **settings
     )
     app.listen(PORT)
