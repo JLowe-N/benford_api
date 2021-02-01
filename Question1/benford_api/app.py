@@ -1,6 +1,13 @@
 from tornado import web, iostream, gen, ioloop
 import os
 from  benford_plot.benford_plot import get_benford_column, get_benford_plot_src_str
+from math import log
+
+def benford_correlation(digit):
+    return round(log(1 + 1 / digit) / log(10), 2)
+
+BENFORD_DICT = {digit:benford_correlation(digit) for digit in range(1,10)}
+print(BENFORD_DICT)
 
 
 class benfordRequestHandler(web.RequestHandler):
