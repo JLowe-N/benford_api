@@ -1,6 +1,6 @@
 from tornado import web, iostream, gen, ioloop
 import os
-from  benford_plot.benford_plot import get_benford_column, get_benford_plot_src_str
+from benford_plot.benford_plot import get_benford_column, get_benford_plot_src_str
 
 
 class benfordRequestHandler(web.RequestHandler):
