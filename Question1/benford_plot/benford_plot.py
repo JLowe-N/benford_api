@@ -78,4 +78,8 @@ def get_benford_plot_src_str(benford_df):
     plot = b64encode(stream.read())
     plot_src = 'data:image/png;base64,' + plot.decode('utf-8')
 
+    # cleanup
+    fig.clear()
+    plt.close(fig)
+
     return plot_src
