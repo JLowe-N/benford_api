@@ -21,25 +21,73 @@
     </header>
 
     <main>
-        <section id="instructions">
+        <section id="background">
+            <h2>Background</h2>
+            <p>
+            Benford's law states that in many naturally occurring collections
+            of numbers, the leading digit is observed to be '1' about 30% of the
+            time, with the succeeding digits following a decreasing power law trend.
+            </p>
+            <p>
+            This observation can be used to detect dataset manipulation or
+            falsification, in applications such as accounting, natural sciences,
+            or experimental data.   There are examples where this trend does
+            not hold true - particularly where all digits have an equal likelihood
+            of being the leading digit.  For example, there would not be many 
+            NBA players shorter than 5 feet - generally they would range from 
+            5 - 7 feet. Also, random number generators would be expected to have
+            an even digit distribution - so Benford's law would not apply.  Small
+            sample sizes and datasets that do no span several orders of magnitude
+            may also deviate from Benford's law such as a person's weight or IQ
+            score.
+            </p>
+        </section>
 
+        <section id="instructions">
+            <h2>Instructions</h2>
+            <p>
+            You may submit your own dataset to test against Benford's Law.
+            This web application will plot your data against the expected Benford
+            distribution, and also perform a <a href="https://en.wikipedia.org/wiki/Chi-squared_test">
+            Chi-Squared Test</a> to see if your data conforms to Benford's Law.  
+            </p>
         </section>
 
         <section id="csv_input">
             <p>Please upload your TSV to analyze.</p>
             <form enctype="multipart/form-data" action="/" method="post">
-                File: <input type="file" name="input_file" />
+                <input type="file" name="input_file" />
                 <br />
                 <br />
-                <input type="submit" value="upload">Upload</input>
+                <input class="btn" type="submit" value="Upload File"/>
             </form>
         </section>
 
         <section id="results">
-            <div id="plot">
+            <div class="plot-container">
                 {% if plot %}
-                <img src="{{ plot }}" /> {% end %}
+                <img 
+                class="plot"
+                alt="Benford Law Plot Overlaying Input Data" 
+                src="{{ plot }}" 
+                /> 
+                {% else %}
+                <div class="plot-placeholder">
+                    <div><span>Upload Data To Generate Plot</span></div>
+                </div>
+                {% end %}
             </div>
+            <p id="pval_reject_null">
+            The supplied data appears not to conform to Benford's Law as the Chi-Squared
+            Test's p-value was ***PVAL*** which is less than 0.01. This means we can
+            reject a fit to Benford's law with 99% Confidence due to how the observed
+            data differs from the expected distribution.  There is only a 1 in 100 chance
+            that this difference in distribution occurred by random chance.
+            <p id="pval_accept_null">
+            The supplied data is not statistically different from the Benford's
+            Law distribution, as the p-value was ***PVAL*** which is greater than
+            0.01. This should be apparent from the plot of your data.
+            </p>
         </section>
     </main>
 

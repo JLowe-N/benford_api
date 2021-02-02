@@ -8,7 +8,7 @@ from scipy.stats import chisquare
 
 
 def benford_correlation(digit):
-    return round(log(1 + 1 / digit) / log(10), 2)
+    return log(1 + 1 / digit) / log(10)
 
 
 BENFORD_CURVE = pd.Series({digit: benford_correlation(
