@@ -16,6 +16,12 @@ class benfordRequestHandler(web.RequestHandler):
         self.render('index.html', plot=plot_src)
 
 
+class iconRequestHandler(web.RequestHandler):
+    def get(self):
+        with open(os.path.join(os.path.dirname(__file__), "static/favicon.svg")) as favicon:
+            self.write(favicon.read())
+
+
 def main():
     settings = {
         "template_path": os.path.join(os.path.dirname(__file__), "templates"),
@@ -26,6 +32,7 @@ def main():
     app = web.Application(
         [
             (r"/", benfordRequestHandler),
+            (r"/favicon.ico", iconRequestHandler),
         ], **settings
     )
     app.listen(PORT)
