@@ -77,17 +77,26 @@
                 </div>
                 {% end %}
             </div>
+            {% if plot %}
+                {% if pval <= 0.01 %}
             <p id="pval_reject_null">
             The supplied data appears not to conform to Benford's Law as the Chi-Squared
-            Test's p-value was ***PVAL*** which is less than 0.01. This means we can
-            reject a fit to Benford's law with 99% Confidence due to how the observed
+            Test's p-value was {{ pval }} which is less than the 99% CI p-value of 0.01.
+            This means we can reject a fit to Benford's law with 99% Confidence due to how the observed
             data differs from the expected distribution.  There is only a 1 in 100 chance
             that this difference in distribution occurred by random chance.
-            <p id="pval_accept_null">
-            The supplied data is not statistically different from the Benford's
-            Law distribution, as the p-value was ***PVAL*** which is greater than
-            0.01. This should be apparent from the plot of your data.
             </p>
+                {% end %}
+                {% if pval > 0.01 %}
+            <p id="pval_accept_null">
+            The supplied data follows the Benford's Law distribution, as the p-value 
+            was {{ pval }} which is greater than target p-value 0.01 of the 99% CI. 
+            This should be apparent from the plot of your data.  The data is not
+            statistically different than the Benford Law distribution (we accept
+            the null hypothesis).
+            </p>
+                {% end %}
+            {% end %}
         </section>
     </main>
 
