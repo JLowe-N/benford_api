@@ -1,6 +1,6 @@
 // File Validation - Client Side
-// tsv, csv only preferred
-const reAllowedFiles = /^.*\.[ct]sv$/
+// tsv only preferred, but allowing all files to submit to support extensionless file provided
+const reAllowedFiles = /^.*\.tsv$/
 // 100MB limit, but would likely need to adjust based on app requirements
 const fileSizeLimit = 1024 * 1024 * 100 * 1.024
 let existingHints = []

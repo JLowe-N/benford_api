@@ -1,4 +1,4 @@
-from tornado import web, iostream, gen, ioloop
+from tornado import web, ioloop
 import os
 from benford_plot.benford_plot import get_benford_column, get_benford_plot_src_str, get_p_value
 
@@ -36,7 +36,7 @@ def main():
     settings = {
         "template_path": os.path.join(os.path.dirname(__file__), "templates"),
         "static_path": os.path.join(os.path.dirname(__file__), "static"),
-        "debug": True
+        "debug": False
     }
     PORT = 8881
     app = web.Application(

@@ -31,6 +31,13 @@ http://localhost:8881 - or whatever port is available to use.  The right side
 of the colon is the port inside the container which is dependent on the project code.
 The port set for the project code is also 8881.
 
+When you are done with the container, be sure to kill it to free up those resources.
+
+To see active containers:
+`docker ps`
+
+To remote containers: `docker kill <NAMES>`
+
 ### Local Python Runtime
 
 Alternatively, this application can be installed with a local installation of Python.

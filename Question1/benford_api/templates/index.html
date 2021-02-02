@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href=<title>Benford API</title>
+    <title>Benford API</title>
     <link rel="icon" type="image/svg+xml" href="{{ static_url("favicon.svg") }}">
     <link rel="alternate icon" href="{{ static_url("favicon.ico") }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
@@ -56,9 +56,11 @@
         <section id="csv_input">
             <p>Please upload your TSV to analyze.</p>
             <form enctype="multipart/form-data" action="/" method="post">
+                <label for="target_column">Target Column:</label>
                 <input type="text" name="target_column" placeholder="Default: 7_2009" />
                 <br />
                 <br />
+                <label for="input_file">File Input:</label>
                 <input id="benfordFileInput" type="file" name="input_file" />
                 <br />
                 <br />

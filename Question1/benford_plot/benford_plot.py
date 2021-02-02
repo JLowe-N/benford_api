@@ -25,7 +25,6 @@ def get_benford_column(file_body, target_col_header, sep='\t'):
 
     # extract leading digit from target column, drop 0 values
     dataset = pd.read_csv(io.BytesIO(file_body), sep=sep)
-    print(target_col_header)
     target_col = dataset[target_col_header]
     target_col = target_col.rename('actual_freq')
     target_col = target_col.transform(extract_first_digit, axis=0)
