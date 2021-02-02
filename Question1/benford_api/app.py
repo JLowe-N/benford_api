@@ -8,9 +8,17 @@ class benfordRequestHandler(web.RequestHandler):
         self.render('index.html', plot=None, pval=None)
 
     def post(self):
+        # take in input_file
         input_file = self.request.files['input_file'][0]
         body = input_file['body']
-        benford_col = get_benford_column(body)
+
+        # extract needed columns
+        target_col = self.get_body_argument('target_column')
+        if target_col == '':
+            target_col = '7_2009'
+        benford_col = get_benford_column(body, target_col)
+
+        # get results
         p_value = round(get_p_value(
             benford_col['actual_freq'], benford_col['expected_freq']), 3)
         plot_src = get_benford_plot_src_str(benford_col)

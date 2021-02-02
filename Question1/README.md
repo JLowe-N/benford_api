@@ -22,7 +22,7 @@ Python libraries, source code. It will allow you quickly spin up multiple instan
 of the project server.
 
 Start container:
-`docker run --name test-benford -p 8881:8881 --rm benford_project`
+`docker run --name test-benford -p 8881:8881 benford_project`
 
 What's important here is the -p tag. This docker flag allows you to set
 the outer and inner ports that allows you to communicate with the container.

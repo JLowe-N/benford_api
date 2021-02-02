@@ -15,7 +15,7 @@ BENFORD_CURVE = pd.Series({digit: benford_correlation(
     digit) for digit in range(1, 10)})
 
 
-def get_benford_column(file_body, target_col_header=None):
+def get_benford_column(file_body, target_col_header, sep='\t'):
     def extract_first_digit(number):
         string = str(number)
         first_char = string[0]
@@ -24,8 +24,9 @@ def get_benford_column(file_body, target_col_header=None):
         return first_digit
 
     # extract leading digit from target column, drop 0 values
-    dataset = pd.read_csv(io.BytesIO(file_body), sep='\t')
-    target_col = dataset['7_2009']
+    dataset = pd.read_csv(io.BytesIO(file_body), sep=sep)
+    print(target_col_header)
+    target_col = dataset[target_col_header]
     target_col = target_col.rename('actual_freq')
     target_col = target_col.transform(extract_first_digit, axis=0)
     target_col = target_col[(target_col.T != 0)]
@@ -35,13 +36,11 @@ def get_benford_column(file_body, target_col_header=None):
     observation_count = actual_freq.sum()
     expected_freq = pd.Series(
         [int(round(fraction * observation_count, 0)) for fraction in BENFORD_CURVE])
-    print(expected_freq)
 
     # convert counts to percentage
     benford_df = actual_freq.to_frame().reset_index()
     benford_df['expected_freq'] = expected_freq
     benford_df = benford_df.rename(columns={'index': 'digit'})
-    print(benford_df)
     return benford_df
 
 
@@ -52,10 +51,8 @@ def get_p_value(actual_freq, observed_freq):
 
 def get_benford_plot_src_str(benford_df):
     # Calculate p_value for plot
-    print(benford_df)
     p_val = round(get_p_value(
         benford_df['actual_freq'], benford_df['expected_freq']), 4)
-    print(p_val)
     # Create combo chart
     fig, ax = plt.subplots(figsize=(10, 6))
     # bar plot from user data
