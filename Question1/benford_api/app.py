@@ -38,7 +38,7 @@ def main():
         "static_path": os.path.join(os.path.dirname(__file__), "static"),
         "debug": False
     }
-    PORT = os.environ.PORT or 8881  # OR to allow heroku dynamic port assignment
+    PORT = int(os.environ.get("PORT", 8881))  # if heroku, dynamic port assignment, default 8881
     app = web.Application(
         [
             (r"/", benfordRequestHandler),
